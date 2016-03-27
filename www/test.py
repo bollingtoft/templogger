@@ -94,6 +94,8 @@ def print_graph_script(table):
     </script>"""
 
     print (chart_code % (table))
+#      google.charts.load("current", {packages: ["line"]});
+#        var chart = new google.charts.Line(document.getElementById('linechart_material'));
 
 
 
@@ -133,9 +135,9 @@ def show_stats(option):
     print("<hr>")
 
 
-    print("<h2>Minumum temperature&nbsp</h2>")
+    print("<h2>Minimum temperature for last %s hours </h2>" % option)
     print(rowstrmin)
-    print("<h2>Maximum temperature</h2>")
+    print("<h2>Maximum temperaturefor last %s hours </h2>" % option)
     print(rowstrmax)
     print("<h2>Average temperature</h2>")
     print("%.3f" % rowavg+"C")
@@ -146,11 +148,12 @@ def show_stats(option):
     print ("<table>")
     print ("<tr><td><strong>Date/Time</strong></td><td><strong>Temperature</strong></td></tr>")
 
-    rows=curs.execute("SELECT * FROM temps WHERE timestamp>datetime('new','-1 hour') AND timestamp<=datetime('new')")
+    rows=curs.execute("SELECT * FROM temps WHERE timestamp>datetime('now','-1 hour') AND timestamp<=datetime('now')")
 #    rows=curs.execute("SELECT * FROM temps WHERE timestamp>datetime('2013-09-19 21:30:02','-1 hour') AND timestamp<=datetime('2013-09-19 21:31:02')")
     for row in rows:
         rowstr="<tr><td>{0}&emsp;&emsp;</td><td>{1}C</td></tr>".format(str(row[0]),str(row[1]))
         print (rowstr)
+#        print(row)
     print ("</table>")
 
     print ("<hr>")
@@ -163,11 +166,10 @@ def show_stats(option):
 def print_time_selector(option):
 
 #    print( """<form action="/cgi-bin/webgui.py" method="POST">
-#    print( """<form action="/test.py" method="POST">
-#        Show the temperature logs for  
-#        <select name="timeinterval">""")
-
-
+    print( """<form action="../test.py" method="POST">
+        Show the temperature logs for  
+        <select name="timeinterval">""")
+    
     if option is not None:
 
         if option == "6":
@@ -237,7 +239,7 @@ def main():
     records=get_data(option)
 
     # print the HTTP header
-    printHTTPheader()
+#    printHTTPheader()
 
     if len(records) != 0:
         # convert the data into a table
@@ -257,8 +259,9 @@ def main():
     print ("<h1>MBN Raspberry Pi Temperature Logger</h1>")
     print ("<hr>")
     print_time_selector(option)
+    print(option) #MBN test
     show_graph()
- #   show_stats(option)
+    show_stats(option)
     print ("</body>")
     print ("</html>")
 
